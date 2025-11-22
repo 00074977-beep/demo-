@@ -15,14 +15,24 @@ jobs:
           echo "engine" >> car.txt
           echo "wheels" >> car.txt
 
+      - name: Upload car artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: car
+          path: build/
+
   test-the-car:
     runs-on: ubuntu-latest
     needs: build-the-car
     steps:
+      - name: Download car artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: car
+
       - name: Test the car
         run: |
-          test -f build/car.txt
-          cd build
+          test -f car.txt
           grep "chassis" car.txt
           grep "engine" car.txt
           grep "wheels" car.txt
